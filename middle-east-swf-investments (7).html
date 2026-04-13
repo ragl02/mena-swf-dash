@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Middle East SWF Investments</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sand: #F5EFE2; --sand-mid: #E8DCC8; --sand-dark: #C8B898;
+    --ink: #1A1410; --ink-mid: #3D2F20; --ink-light: #7A6A58;
+    --gold: #C9973A; --gold-light: #E8C070; --gold-pale: #F7EDD8;
+    --teal: #1B6B5A; --teal-pale: #D8F0EB;
+    --rose: #8B3A3A; --rose-pale: #F5E0E0;
+    --blue: #2A4B7C; --blue-pale: #D8E4F5;
+    --green: #2D6B35; --green-pale: #D8EFDA;
+    --violet: #5B3A7C; --violet-pale: #EAD8F5;
+    --slate: #445566; --slate-pale: #D8E4EE;
+    --border: rgba(26,20,16,0.12); --border-mid: rgba(26,20,16,0.22);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--sand); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 14px; line-height: 1.6; min-height: 100vh; }
+
+  .header { background: var(--ink); color: var(--sand); padding: 2.5rem 3rem 2rem; position: relative; overflow: hidden; }
+  .header::before { content: ''; position: absolute; top: 0; right: 0; width: 420px; height: 100%; background: repeating-linear-gradient(-45deg, transparent, transparent 18px, rgba(201,151,58,0.07) 18px, rgba(201,151,58,0.07) 19px); }
+  .header-inner { max-width: 1400px; margin: 0 auto; position: relative; }
+  .header-title { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 500; line-height: 1.1; letter-spacing: -0.02em; color: var(--sand); }
+  .header-title span { color: var(--gold-light); }
+  .header-meta { font-size: 12px; color: var(--sand-dark); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.6rem; font-weight: 300; }
+  .header-stats { display: flex; gap: 2.5rem; flex-wrap: wrap; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(245,239,226,0.15); }
+  .hstat-val { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 500; color: var(--gold-light); line-height: 1; }
+  .hstat-label { font-size: 11px; color: var(--sand-dark); letter-spacing: 0.07em; text-transform: uppercase; margin-top: 3px; font-weight: 300; }
+
+  .main { max-width: 1400px; margin: 0 auto; padding: 2rem 3rem 4rem; }
+
+  .fund-legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+  .fund-pill { display: flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 100px; font-size: 11px; font-weight: 500; letter-spacing: 0.03em; border: 1px solid transparent; white-space: nowrap; }
+  .fund-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+  .filter-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 1.5rem; padding: 1rem 1.25rem; background: white; border: 1px solid var(--border); border-radius: 8px; }
+  .filter-label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-light); font-weight: 500; margin-right: 4px; }
+  .filter-bar select { font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 6px 24px 6px 12px; border: 1px solid var(--border-mid); border-radius: 6px; background: var(--sand); color: var(--ink); cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237A6A58' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; }
+  .filter-bar select:focus { outline: none; border-color: var(--gold); }
+  .co-toggle { display: flex; align-items: center; gap: 6px; font-size: 12px; cursor: pointer; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-mid); background: var(--sand); color: var(--ink); font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
+  .co-toggle.active { background: var(--gold-pale); border-color: var(--gold); }
+  .co-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
+  .result-count { margin-left: auto; font-size: 11px; color: var(--ink-light); font-family: 'DM Mono', monospace; }
+
+  .table-wrapper { background: white; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; min-width: 1080px; }
+  thead tr { background: var(--ink); }
+  th { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 12px 14px; text-align: left; white-space: nowrap; color: var(--sand-dark); cursor: pointer; user-select: none; }
+  th:hover { color: var(--gold-light); }
+  th.sorted { color: var(--gold-light); }
+  th .sort-arrow { margin-left: 4px; opacity: 0.5; font-size: 9px; }
+  th.sorted .sort-arrow { opacity: 1; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--sand); }
+  tbody tr.co-row { background: var(--gold-pale); }
+  tbody tr.co-row:hover { background: #f0e0b8; }
+  td { padding: 11px 14px; font-size: 13px; color: var(--ink); vertical-align: top; }
+
+  /* Fund column */
+  .funds-cell-v { display: flex; flex-direction: column; gap: 5px; min-width: 100px; }
+  .fund-tag-row { display: flex; align-items: center; gap: 6px; }
+  .fund-flag { font-size: 15px; line-height: 1; flex-shrink: 0; }
+  .fund-tag { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 4px; white-space: nowrap; }
+
+  .company-name { font-weight: 500; font-size: 13px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .co-badge { font-size: 9px; letter-spacing: 0.06em; font-weight: 500; padding: 2px 6px; border-radius: 4px; background: var(--gold); color: white; text-transform: uppercase; }
+  .company-note { font-size: 11px; color: var(--ink-light); margin-top: 2px; line-height: 1.4; max-width: 280px; }
+  .hq-cell { font-size: 12px; color: var(--ink-light); white-space: nowrap; }
+  .sector-main { font-size: 12px; font-weight: 500; color: var(--ink-mid); }
+  .sector-sub { font-size: 11px; color: var(--ink-light); margin-top: 1px; max-width: 160px; line-height: 1.3; }
+  .amount-cell { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; white-space: nowrap; }
+  .stage-pill { display: inline-block; font-size: 10px; padding: 3px 8px; border-radius: 100px; font-weight: 500; white-space: nowrap; border: 1px solid; }
+  .date-cell { font-size: 12px; color: var(--ink-light); white-space: nowrap; font-family: 'DM Mono', monospace; }
+
+  .stage-acquisition { background: var(--blue-pale); color: var(--blue); border-color: rgba(42,75,124,0.25); }
+  .stage-vc   { background: var(--teal-pale);   color: var(--teal);   border-color: rgba(27,107,90,0.25); }
+  .stage-infra { background: var(--violet-pale); color: var(--violet); border-color: rgba(91,58,124,0.25); }
+  .stage-public { background: var(--slate-pale); color: var(--slate);  border-color: rgba(68,85,102,0.25); }
+  .stage-jv   { background: var(--green-pale);  color: var(--green);  border-color: rgba(45,107,53,0.25); }
+
+  .f-pif  { background: #D8E4F5; color: #1B3A6B; }
+  .f-mub  { background: #D8F0EB; color: #0F5A48; }
+  .f-adia { background: #EAD8F5; color: #4A2A6B; }
+  .f-adq  { background: #F5E0D8; color: #6B2A1B; }
+  .f-qia  { background: #F5D8E8; color: #6B1B3A; }
+  .f-mgx  { background: #E0F0D8; color: #1E5A25; }
+  .f-kia  { background: #F5EAD0; color: #5A4010; }
+  .f-limad { background: #EDD8F5; color: #3A1A5A; }
+  .f-oia  { background: #E8E4D8; color: #4A4030; }
+
+  .charts-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+  .chart-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; }
+  .chart-title { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 1rem; }
+
+  .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .bar-label { font-size: 11px; color: var(--ink-light); width: 95px; text-align: right; flex-shrink: 0; line-height: 1.3; }
+  .bar-label-name { font-weight: 500; color: var(--ink-mid); }
+  .bar-label-country { font-size: 9px; color: var(--ink-light); letter-spacing: 0.03em; }
+  .bar-track { flex: 1; height: 18px; background: var(--sand-mid); border-radius: 3px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; }
+  .bar-val { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--ink-light); width: 58px; flex-shrink: 0; }
+
+  .donut-wrap { display: flex; align-items: center; gap: 1rem; }
+  .donut-legend { flex: 1; }
+  .donut-legend-row { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
+  .donut-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .donut-name { font-size: 11px; color: var(--ink-mid); flex: 1; }
+  .donut-pct { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--ink-light); }
+
+  .trend-section { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; margin-bottom: 1.5rem; }
+  .trend-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 500; color: var(--ink); margin-bottom: 1rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); }
+  .trend-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1.25rem 2.5rem; }
+  .trend-item-title { font-size: 12px; font-weight: 500; color: var(--ink-mid); margin-bottom: 3px; display: flex; align-items: center; gap: 7px; }
+  .trend-bullet { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .trend-item-body { font-size: 12px; color: var(--ink-light); line-height: 1.6; padding-left: 13px; }
+
+  .footer { margin-top: 3rem; padding: 1.5rem 0 0; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  .footer-note { font-size: 11px; color: var(--ink-light); max-width: 600px; line-height: 1.6; }
+  .footer-date { font-size: 11px; color: var(--ink-light); font-family: 'DM Mono', monospace; }
+
+  @media (max-width: 1200px) { .charts-grid { grid-template-columns: 1fr 1fr; } .trend-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) { .header { padding: 1.5rem; } .main { padding: 1.5rem; } .header-title { font-size: 2rem; } .charts-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div>
+      <h1 class="header-title">Middle East <span>SWF</span> Investments</h1>
+      <p class="header-meta">Sovereign Wealth Fund Deal Tracker &middot; Mar 2025 &ndash; Mar 2026 &middot; Public records &amp; press releases</p>
+    </div>
+    <div class="header-stats">
+      <div class="hstat"><div class="hstat-val">$176B+</div><div class="hstat-label">Total deal value tracked</div></div>
+      <div class="hstat"><div class="hstat-val">42</div><div class="hstat-label">Deals catalogued</div></div>
+      <div class="hstat"><div class="hstat-val">9</div><div class="hstat-label">Funds tracked</div></div>
+      <div class="hstat"><div class="hstat-val">11</div><div class="hstat-label">Co-invested deals</div></div>
+      <div class="hstat"><div class="hstat-val">14</div><div class="hstat-label">Countries of HQ</div></div>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">Capital deployed by fund</div>
+      <div id="fundChart"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Deal value by sector</div>
+      <div id="sectorChart"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Deals by fund (count)</div>
+      <div id="fundCountChart"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Stage breakdown (deal count)</div>
+      <div class="donut-wrap">
+        <svg width="110" height="110" viewBox="0 0 110 110" id="donutSvg"></svg>
+        <div class="donut-legend" id="donutLegend"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="trend-section">
+    <div class="trend-title">Strategic trends &amp; analysis</div>
+    <div class="trend-grid">
+      <div class="trend-item">
+        <div class="trend-item-title"><span class="trend-bullet" style="background:#2A4B7C"></span>AI infrastructure as the defining thesis</div>
+        <div class="trend-item-body">Over 60% of tracked deal value flows into AI &mdash; frontier models, data centers, and chip design. MGX alone committed north of $85B across Aligned Data Centers, Stargate, OpenAI, and its France campus. This is not passive exposure; it is an active industrial policy bet that AI infrastructure leadership confers geopolitical leverage.</div>
+      </div>
+      <div class="trend-item">
+        <div class="trend-item-title"><span class="trend-bullet" style="background:#C9973A"></span>Co-investment as a coordination mechanism</div>
+        <div class="trend-item-body">Eleven deals involved multiple MENA SWFs, spanning frontier AI (xAI, Anthropic, Databricks), infrastructure (AIP, BAIIF) and now media (Warner Bros. Discovery). The Paramount/WBD deal is the first three-way Gulf SWF co-investment &mdash; PIF, QIA and newly-launched L'imad collectively committing ~$24B. QIA and MGX remain the most active AI co-investing pair.</div>
+      </div>
+      <div class="trend-item">
+        <div class="trend-item-title"><span class="trend-bullet" style="background:#1B6B5A"></span>Mega take-privates redefine PIF's global footprint</div>
+        <div class="trend-item-body">PIF's $55B Electronic Arts consortium is the largest all-cash take-private in history, pushing estimated annual deployment to $36B &mdash; an 81% year-on-year surge. Combined with Heathrow and Selfridges, PIF is building permanent ownership in global entertainment, travel, and retail infrastructure.</div>
+      </div>
+      <div class="trend-item">
+        <div class="trend-item-title"><span class="trend-bullet" style="background:#7A4AB0"></span>Mubadala diversifies across the full deal spectrum</div>
+        <div class="trend-item-body">From an $8.7B wealth management take-private (CI Financial) to a $150M seed-adjacent biotech portfolio and a ground-up pharma company, Mubadala is the most structurally diversified fund in this dataset. Its $1.38B Crusoe lead is a rare instance of an SWF leading a Series E in a capital-intensive compute business.</div>
+      </div>
+      <div class="trend-item">
+        <div class="trend-item-title"><span class="trend-bullet" style="background:#8B3A3A"></span>Energy transition as a strategic hedge</div>
+        <div class="trend-item-body">Deals in critical minerals (TechMet, Ivanhoe Mines), green energy (Greenko, Techem), and copper mining reflect a deliberate hedge against hydrocarbon dependency. QIA's $500M Ivanhoe stake and ADIA's Greenko position target supply chains underpinning the very clean energy transition these funds are financing elsewhere.</div>
+      </div>
+      <div class="trend-item">
+        <div class="trend-item-title"><span class="trend-bullet" style="background:#2D6B35"></span>US dominates; Europe rising fast</div>
+        <div class="trend-item-body">Over 55% of deals by value target US-headquartered companies, led by AI and financial services. European deal value is surging &mdash; Techem ($7.9B), Apleona ($4.2B), BASF Coatings ($8.6B), and MGX's France data campus signal a deliberate push to build strategic presence ahead of EU AI regulation.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fund-legend" id="fundLegend"></div>
+
+  <div class="filter-bar">
+    <span class="filter-label">Filter</span>
+    <select id="fundFilter" onchange="applyFilters()">
+      <option value="all">All funds</option>
+      <option value="PIF">PIF &mdash; Saudi Arabia</option>
+      <option value="Mubadala">Mubadala &mdash; UAE</option>
+      <option value="ADIA">ADIA &mdash; UAE</option>
+      <option value="ADQ">ADQ &mdash; UAE</option>
+      <option value="QIA">QIA &mdash; Qatar</option>
+      <option value="MGX">MGX &mdash; UAE</option>
+      <option value="LIMAD">L'imad &mdash; UAE</option>
+      <option value="KIA">KIA &mdash; Kuwait</option>
+      <option value="OIA">OIA &mdash; Oman</option>
+    </select>
+    <select id="sectorFilter" onchange="applyFilters()">
+      <option value="all">All sectors</option>
+      <option value="AI / Artificial Intelligence">AI / Artificial Intelligence</option>
+      <option value="Gaming / Entertainment">Gaming / Entertainment</option>
+      <option value="Financial Services">Financial Services</option>
+      <option value="Infrastructure">Infrastructure</option>
+      <option value="Energy Transition">Energy Transition</option>
+      <option value="Crypto / Blockchain">Crypto / Blockchain</option>
+      <option value="Life Sciences">Life Sciences</option>
+      <option value="Real Assets">Real Assets</option>
+      <option value="Industrials">Industrials</option>
+      <option value="Media / Entertainment">Media / Entertainment</option>
+    </select>
+    <select id="stageFilter" onchange="applyFilters()">
+      <option value="all">All stages</option>
+      <option value="Acquisition">Acquisition</option>
+      <option value="Take-private">Take-private</option>
+      <option value="Growth VC">Growth VC / Series</option>
+      <option value="Infrastructure">Infrastructure / JV</option>
+      <option value="Public equity">Public equity</option>
+    </select>
+    <button class="co-toggle" id="coToggle" onclick="toggleCo()">
+      <span class="co-dot"></span> Co-investments only
+    </button>
+    <span class="result-count" id="resultCount">39 deals</span>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Fund</th>
+          <th onclick="sortBy('company')">Company <span class="sort-arrow">&#8597;</span></th>
+          <th onclick="sortBy('hq')">Headquarters <span class="sort-arrow">&#8597;</span></th>
+          <th onclick="sortBy('sector')">Sector <span class="sort-arrow">&#8597;</span></th>
+          <th>Subvertical</th>
+          <th onclick="sortBy('amount')" class="sorted">Deal value <span class="sort-arrow">&#8595;</span></th>
+          <th>Stage</th>
+          <th onclick="sortBy('dateSort')">Date <span class="sort-arrow">&#8597;</span></th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    <p class="footer-note">Data compiled from public filings, press releases, and media reports. Deal values represent publicly disclosed figures or consensus estimates where exact sums are undisclosed. Co-investment (gold highlight) indicates participation by two or more MENA sovereign wealth funds in the same deal. Some deal values are enterprise value or committed platform capital and may differ from equity contributed.</p>
+    <p class="footer-date">Updated March 2026</p>
+  </div>
+
+</main>
+
+<script>
+const DEALS = [
+  { company:"Electronic Arts", hq:"Redwood City, CA &middot; USA", sector:"Gaming / Entertainment", sub:"Video games / Interactive media", amount:55000, amtLabel:"$55B", stage:"Take-private", stageGroup:"Take-private", date:"Sep 2025", dateSort:"2025-09", funds:["PIF"], co:false, note:"PIF led consortium with Silver Lake &amp; Affinity; largest all-cash take-private in history" },
+  { company:"Aligned Data Centers", hq:"Irving, TX &middot; USA", sector:"AI / Artificial Intelligence", sub:"Data center / AI infrastructure", amount:40000, amtLabel:"$40B", stage:"Acquisition", stageGroup:"Acquisition", date:"Oct 2025", dateSort:"2025-10", funds:["MGX"], co:false, note:"MGX joined BlackRock GIP, Microsoft &amp; Nvidia consortium" },
+  { company:"MGX France Data Campus", hq:"France", sector:"AI / Artificial Intelligence", sub:"AI data center / European infra", amount:31200, amtLabel:"$31&ndash;52B (planned)", stage:"Greenfield", stageGroup:"Infrastructure", date:"2025", dateSort:"2025-07", funds:["MGX"], co:false, note:"1GW campus with Mistral &amp; Nvidia; largest planned AI campus in Europe" },
+  { company:"Anthropic (Series G)", hq:"San Francisco, CA &middot; USA", sector:"AI / Artificial Intelligence", sub:"Frontier AI / LLM / safety", amount:30000, amtLabel:"$30B", stage:"Series G", stageGroup:"Growth VC", date:"Feb 2026", dateSort:"2026-02", funds:["QIA","MGX"], co:true, note:"QIA increased exposure; MGX entered as co-lead" },
+  { company:"xAI", hq:"Memphis, TN &middot; USA", sector:"AI / Artificial Intelligence", sub:"Frontier AI / LLM", amount:20000, amtLabel:"$20B", stage:"Series E", stageGroup:"Growth VC", date:"Jan 2026", dateSort:"2026-01", funds:["QIA","MGX"], co:true, note:"$20B round exceeded $15B target; Nvidia &amp; Cisco also participated" },
+  { company:"QIA&ndash;Brookfield AI JV", hq:"Global", sector:"AI / Artificial Intelligence", sub:"AI infrastructure / Data centers", amount:20000, amtLabel:"$20B JV", stage:"Infrastructure JV", stageGroup:"Infrastructure", date:"2025", dateSort:"2025-06", funds:["QIA"], co:false, note:"QIA partnered with Brookfield on $20B AI infrastructure venture" },
+  { company:"Hologic Inc.", hq:"Marlborough, MA &middot; USA", sector:"Life Sciences", sub:"Medical devices / women's health", amount:18300, amtLabel:"~$18.3B", stage:"Acquisition", stageGroup:"Acquisition", date:"Oct 2025", dateSort:"2025-10", funds:["ADIA"], co:false, note:"ADIA minority alongside Blackstone &amp; TPG; total EV ~$18.3B" },
+  { company:"Anthropic (Series F)", hq:"San Francisco, CA &middot; USA", sector:"AI / Artificial Intelligence", sub:"Frontier AI / LLM / safety", amount:13000, amtLabel:"$13B", stage:"Series F", stageGroup:"Growth VC", date:"Sep 2025", dateSort:"2025-09", funds:["QIA"], co:false, note:"QIA named significant investor; valuation $183B" },
+  { company:"CI Financial Corp.", hq:"Toronto &middot; Canada", sector:"Financial Services", sub:"Wealth &amp; asset management", amount:8700, amtLabel:"~$8.7B", stage:"Take-private", stageGroup:"Take-private", date:"Aug 2025", dateSort:"2025-08", funds:["Mubadala"], co:false, note:"Mubadala Capital acquired 100% of CI shares at C$32/share" },
+  { company:"BASF Coatings", hq:"M&uuml;nster &middot; Germany", sector:"Industrials", sub:"Specialty chemicals / Coatings", amount:8600, amtLabel:"~&euro;7.7B (~$8.6B)", stage:"Acquisition", stageGroup:"Acquisition", date:"Oct 2025", dateSort:"2025-10", funds:["QIA"], co:false, note:"QIA partnered with Carlyle Group" },
+  { company:"Techem GmbH", hq:"Eschborn &middot; Germany", sector:"Energy Transition", sub:"Real estate energy services / decarbonisation", amount:7900, amtLabel:"~$7.9B", stage:"Acquisition", stageGroup:"Acquisition", date:"Jul 2025", dateSort:"2025-07", funds:["Mubadala"], co:false, note:"Consortium with Partners Group, GIC, TPG Rise Climate" },
+  { company:"Stargate Project (JV)", hq:"USA (multi-state)", sector:"AI / Artificial Intelligence", sub:"AI infrastructure / Data centers", amount:7000, amtLabel:"~$7B committed", stage:"Infrastructure JV", stageGroup:"Infrastructure", date:"Jan 2025", dateSort:"2025-01", funds:["MGX"], co:false, note:"MGX partner with OpenAI, SoftBank, Oracle; $500B headline project" },
+  { company:"OpenAI", hq:"San Francisco, CA &middot; USA", sector:"AI / Artificial Intelligence", sub:"Frontier AI / LLM", amount:6600, amtLabel:"$6.6B secondary", stage:"Secondary", stageGroup:"Growth VC", date:"Oct 2025", dateSort:"2025-10", funds:["MGX"], co:false, note:"Secondary at $500B valuation; alongside Thrive Capital &amp; SoftBank" },
+  { company:"Databricks", hq:"San Francisco, CA &middot; USA", sector:"AI / Artificial Intelligence", sub:"Data &amp; AI platform", amount:5000, amtLabel:"$5B round", stage:"Growth VC", stageGroup:"Growth VC", date:"2025", dateSort:"2025-05", funds:["QIA","MGX"], co:true, note:"Both QIA &amp; MGX invested; valuation $134B" },
+  { company:"Brookfield BAIIF", hq:"Toronto &middot; Canada / Global", sector:"AI / Artificial Intelligence", sub:"AI infrastructure / Data centers / Energy", amount:5000, amtLabel:"$5B (anchor in $10B fund)", stage:"Infrastructure JV", stageGroup:"Infrastructure", date:"Nov 2025", dateSort:"2025-11", funds:["KIA","MGX"], co:true, note:"KIA &amp; Nvidia founding anchor investors; Brookfield targets $100B in AI infrastructure assets" },
+  { company:"Apleona Group", hq:"Neu-Isenburg &middot; Germany", sector:"Infrastructure", sub:"Integrated facility management", amount:4180, amtLabel:"~$4.2B", stage:"Acquisition", stageGroup:"Acquisition", date:"Feb 2025", dateSort:"2025-02", funds:["Mubadala"], co:false, note:"Minority stake alongside Bain Capital Private Equity Europe" },
+  { company:"AIA Group (sell-down)", hq:"Hong Kong", sector:"Financial Services", sub:"Insurance / Public equity exit", amount:3400, amtLabel:"$3.4B", stage:"Public equity", stageGroup:"Public equity", date:"Jul 2025", dateSort:"2025-07", funds:["KIA"], co:false, note:"KIA sold 3.7% stake via block trades; near-full exit from life insurer" },
+  { company:"Bank of America (sell-down)", hq:"Charlotte, NC &middot; USA", sector:"Financial Services", sub:"Banking / Public equity exit", amount:3100, amtLabel:"$3.1B", stage:"Public equity", stageGroup:"Public equity", date:"Jul 2025", dateSort:"2025-07", funds:["KIA"], co:false, note:"KIA sold substantial BofA position; portfolio rebalancing away from legacy financials" },
+  { company:"Humain (AI Co.)", hq:"Riyadh &middot; Saudi Arabia", sector:"AI / Artificial Intelligence", sub:"National AI champion / LLM / Data centers", amount:3000, amtLabel:"$3B+", stage:"Greenfield", stageGroup:"Infrastructure", date:"Nov 2025", dateSort:"2025-11", funds:["PIF"], co:false, note:"PIF-backed national AI company; Blackstone $3B data center deal; Nvidia, AMD, Qualcomm partners" },
+  { company:"Blue Owl Digital Infra Platform", hq:"New York, NY &middot; USA", sector:"AI / Artificial Intelligence", sub:"Data connectivity / Digital infrastructure", amount:3000, amtLabel:"$3B platform", stage:"Partnership", stageGroup:"Infrastructure", date:"Sep 2025", dateSort:"2025-09", funds:["QIA"], co:false, note:"QIA &amp; Blue Owl launched $3B data connectivity platform" },
+  { company:"AI Infrastructure Partnership (AIP)", hq:"New York &middot; USA / Global", sector:"AI / Artificial Intelligence", sub:"AI infrastructure / Data centers", amount:3000, amtLabel:"Est. $3B+ equity", stage:"Infrastructure JV", stageGroup:"Infrastructure", date:"Jun 2025", dateSort:"2025-06", funds:["KIA","MGX"], co:true, note:"KIA joined as first non-founder financial anchor alongside MGX, BlackRock GIP &amp; Microsoft" },
+  { company:"Arm Holdings (stake increase)", hq:"Cambridge &middot; UK", sector:"AI / Artificial Intelligence", sub:"Semiconductors / Chip design", amount:2000, amtLabel:"~$2B est.", stage:"Public equity", stageGroup:"Public equity", date:"2025", dateSort:"2025-04", funds:["PIF"], co:false, note:"PIF more than doubled Arm stake per 13F filing" },
+  { company:"Binance", hq:"Dubai &middot; UAE", sector:"Crypto / Blockchain", sub:"Crypto exchange", amount:2000, amtLabel:"$2B", stage:"Strategic", stageGroup:"Growth VC", date:"Mar 2025", dateSort:"2025-03", funds:["MGX"], co:false, note:"MGX minority stake; settled via World Liberty Financial stablecoin" },
+  { company:"Selfridges", hq:"London &middot; UK", sector:"Real Assets", sub:"Luxury retail real estate", amount:2000, amtLabel:"~$2B (40% stake)", stage:"Acquisition", stageGroup:"Acquisition", date:"2025", dateSort:"2025-06", funds:["PIF"], co:false, note:"PIF acquired 40% stake in iconic UK department store" },
+  { company:"TikTok USA (stake)", hq:"New York, NY &middot; USA", sector:"AI / Artificial Intelligence", sub:"Social media / AI recommendation", amount:2000, amtLabel:"~$2B est.", stage:"Strategic", stageGroup:"Growth VC", date:"Sep 2025", dateSort:"2025-09", funds:["MGX"], co:false, note:"MGX ~15% stake in Oracle/Silver Lake consortium holding 45% of TikTok USA" },
+  { company:"Heathrow Airport", hq:"London &middot; UK", sector:"Infrastructure", sub:"Aviation / Transportation infrastructure", amount:1700, amtLabel:"~$1.7B (15% stake)", stage:"Acquisition", stageGroup:"Acquisition", date:"Dec 2024", dateSort:"2024-12", funds:["PIF"], co:false, note:"Alongside Ardian (22.6%); total deal $4.2B" },
+  { company:"Crusoe Energy Systems", hq:"Denver, CO &middot; USA", sector:"AI / Artificial Intelligence", sub:"AI compute / Data center infrastructure", amount:1380, amtLabel:"$1.38B", stage:"Series E", stageGroup:"Growth VC", date:"Oct 2025", dateSort:"2025-10", funds:["Mubadala"], co:false, note:"Mubadala Capital led; valuation >$10B; OpenAI data center operator" },
+  { company:"Applied Intuition", hq:"Sunnyvale, CA &middot; USA", sector:"AI / Artificial Intelligence", sub:"Autonomous systems / Defense tech AI", amount:600, amtLabel:"~$600M est.", stage:"Late VC", stageGroup:"Growth VC", date:"2025", dateSort:"2025-05", funds:["QIA"], co:false, note:"QIA participating investor" },
+  { company:"Ivanhoe Mines", hq:"Vancouver &middot; Canada", sector:"Energy Transition", sub:"Critical minerals / Copper mining", amount:500, amtLabel:"$500M", stage:"Public equity", stageGroup:"Public equity", date:"Sep 2025", dateSort:"2025-09", funds:["QIA"], co:false, note:"QIA took $500M stake in copper-focused miner" },
+  { company:"IDFC First Bank", hq:"Mumbai &middot; India", sector:"Financial Services", sub:"Banking / Financial infrastructure", amount:315, amtLabel:"$315M", stage:"PIPE", stageGroup:"Public equity", date:"2025", dateSort:"2025-04", funds:["ADIA"], co:false, note:"ADIA capital injection via Platinum Invictus unit" },
+  { company:"Mubadala Bio", hq:"Abu Dhabi &middot; UAE", sector:"Life Sciences", sub:"Pharmaceutical manufacturing", amount:300, amtLabel:"~$300M est.", stage:"Greenfield", stageGroup:"Infrastructure", date:"May 2025", dateSort:"2025-05", funds:["Mubadala"], co:false, note:"Mubadala launched new pharma company; 2.5B+ tablets/capsule capacity" },
+  { company:"PayPay Corp. (IPO anchor)", hq:"Tokyo &middot; Japan", sector:"Financial Services", sub:"Digital payments", amount:220, amtLabel:"~$220M", stage:"IPO Cornerstone", stageGroup:"Public equity", date:"2025", dateSort:"2025-06", funds:["ADIA","QIA"], co:true, note:"ADIA &amp; Qatar Holding cornerstone investors in $1.1B US float" },
+  { company:"Tabby (BNPL)", hq:"Dubai / Riyadh &middot; UAE/KSA", sector:"Financial Services", sub:"Fintech / Buy-now-pay-later", amount:200, amtLabel:"$200M", stage:"Series D", stageGroup:"Growth VC", date:"2024", dateSort:"2024-10", funds:["Mubadala"], co:false, note:"Mubadala-backed; preparing for IPO" },
+  { company:"US Biotech (portfolio)", hq:"USA", sector:"Life Sciences", sub:"Biotechnology / Drug discovery", amount:200, amtLabel:"~$200M combined", stage:"Series A/B", stageGroup:"Growth VC", date:"2024&ndash;25", dateSort:"2025-01", funds:["Mubadala"], co:false, note:"Mubadala investments in Metsera, Capstan Therapeutics and other US biotechs" },
+  { company:"TechMet", hq:"Dublin &middot; Ireland", sector:"Energy Transition", sub:"Critical minerals / Clean energy metals", amount:180, amtLabel:"$180M", stage:"Series D", stageGroup:"Growth VC", date:"2024&ndash;25", dateSort:"2025-01", funds:["QIA"], co:false, note:"QIA invested in critical minerals strategic investment company" },
+  { company:"Anaconda", hq:"Austin, TX &middot; USA", sector:"AI / Artificial Intelligence", sub:"AI developer tools / Python platform", amount:150, amtLabel:"$150M", stage:"Growth", stageGroup:"Growth VC", date:"2025", dateSort:"2025-03", funds:["Mubadala"], co:false, note:"Investment in AI tools platform" },
+  { company:"Greenko Energy", hq:"Hyderabad &middot; India", sector:"Energy Transition", sub:"Renewable energy / Green hydrogen", amount:150, amtLabel:"$150M", stage:"Growth", stageGroup:"Growth VC", date:"2024&ndash;25", dateSort:"2025-02", funds:["ADIA"], co:false, note:"ADIA investment in Indian renewable energy platform" },
+  { company:"Cresta (GenAI)", hq:"San Francisco, CA &middot; USA", sector:"AI / Artificial Intelligence", sub:"Generative AI / Contact center software", amount:125, amtLabel:"$125M", stage:"Series D", stageGroup:"Growth VC", date:"2024&ndash;25", dateSort:"2024-11", funds:["QIA"], co:false, note:"QIA co-led Series D" },
+  { company:"Instabase", hq:"San Francisco, CA &middot; USA", sector:"AI / Artificial Intelligence", sub:"Enterprise AI / Document automation", amount:100, amtLabel:"~$100M est.", stage:"Series B/C", stageGroup:"Growth VC", date:"2025", dateSort:"2025-03", funds:["QIA"], co:false, note:"QIA portfolio company; risk-adjusted minority stake" },
+  { company:"Warner Bros. Discovery (Paramount acquisition)", hq:"New York, NY &middot; USA", sector:"Media / Entertainment", sub:"Film / TV / Streaming / News", amount:24000, amtLabel:"~$24B equity (of $111B total)", stage:"Acquisition", stageGroup:"Acquisition", date:"Apr 2026", dateSort:"2026-04", funds:["PIF","QIA","LIMAD"], co:true, note:"PIF ~$10B, QIA &amp; L'imad ~$14B combined; non-voting stakes below 25%; WBD shareholder vote Apr 23 2026. Largest media merger in history" },
+  { company:"Modon Holding PSC", hq:"Abu Dhabi &middot; UAE", sector:"Real Assets", sub:"Real estate / Urban development", amount:1500, amtLabel:"Est. ~$1.5B (84.76% stake)", stage:"Acquisition", stageGroup:"Acquisition", date:"Oct 2025", dateSort:"2025-10", funds:["LIMAD"], co:false, note:"L'imad's first public deal; acquired 84.76% of Abu Dhabi real estate developer from IHC and ADQ" },
+  { company:"Energy Capital Partners JV", hq:"Short Hills, NJ &middot; USA", sector:"Infrastructure", sub:"Power generation / Data center energy", amount:25000, amtLabel:"$25B JV", stage:"Infrastructure JV", stageGroup:"Infrastructure", date:"2025", dateSort:"2025-08", funds:["LIMAD"], co:false, note:"L'imad (via ADQ assets) partnered with Energy Capital Partners to develop US power generation for data centers and industrial growth" }
+];
+
+const FUND_META = {
+  PIF:      { label:"PIF",      country:"Saudi Arabia", flag:"&#x1F1F8;&#x1F1E6;", color:"#3B6EAD", bg:"#D8E4F5", text:"#1B3A6B" },
+  Mubadala: { label:"Mubadala", country:"UAE",          flag:"&#x1F1E6;&#x1F1EA;", color:"#1E8A6A", bg:"#D8F0EB", text:"#0F5A48" },
+  ADIA:     { label:"ADIA",     country:"UAE",          flag:"&#x1F1E6;&#x1F1EA;", color:"#7A4AB0", bg:"#EAD8F5", text:"#4A2A6B" },
+  LIMAD:    { label:"L'imad",   country:"UAE",          flag:"&#x1F1E6;&#x1F1EA;", color:"#5A2D82", bg:"#EDD8F5", text:"#3A1A5A" },
+  QIA:      { label:"QIA",      country:"Qatar",        flag:"&#x1F1F6;&#x1F1E6;", color:"#A0245A", bg:"#F5D8E8", text:"#6B1B3A" },
+  MGX:      { label:"MGX",      country:"UAE",          flag:"&#x1F1E6;&#x1F1EA;", color:"#3A7A42", bg:"#E0F0D8", text:"#1E5A25" },
+  KIA:      { label:"KIA",      country:"Kuwait",       flag:"&#x1F1F0;&#x1F1FC;", color:"#8A6A1A", bg:"#F5EAD0", text:"#5A4010" },
+  OIA:      { label:"OIA",      country:"Oman",         flag:"&#x1F1F4;&#x1F1F2;", color:"#7A6A4A", bg:"#E8E4D8", text:"#4A4030" }
+};
+
+const SECTOR_COLORS = {
+  "AI / Artificial Intelligence":"#2A4B7C","Gaming / Entertainment":"#7A4AB0",
+  "Financial Services":"#1B6B5A","Infrastructure":"#445566","Energy Transition":"#2D6B35",
+  "Crypto / Blockchain":"#B04A2A","Life Sciences":"#8B3A3A","Real Assets":"#7A6A4A","Industrials":"#5B5B3A",
+  "Media / Entertainment":"#7A3A5A"
+};
+
+let currentSort = { field:'amount', dir:-1 };
+let coOnly = false;
+
+function renderLegend() {
+  const el = document.getElementById('fundLegend');
+  Object.entries(FUND_META).forEach(([key, m]) => {
+    const d = document.createElement('div');
+    d.className = 'fund-pill';
+    d.style.cssText = `background:${m.bg};color:${m.text};border-color:${m.color}44`;
+    d.innerHTML = `<span class="fund-dot" style="background:${m.color}"></span>${m.flag} ${m.label} <span style="font-weight:300;font-size:10px;opacity:0.7">${m.country}</span>`;
+    el.appendChild(d);
+  });
+}
+
+function stageClass(s) {
+  if (/Acquisition|Take-private/.test(s)) return 'stage-acquisition';
+  if (/Infrastructure|Greenfield|JV|Partnership/.test(s)) return 'stage-infra';
+  if (/Series|Growth|Secondary|Strategic|Late/.test(s)) return 'stage-vc';
+  if (/Public|PIPE|IPO/.test(s)) return 'stage-public';
+  return 'stage-jv';
+}
+function fundClass(f) {
+  return {PIF:'f-pif',Mubadala:'f-mub',ADIA:'f-adia',LIMAD:'f-limad',QIA:'f-qia',MGX:'f-mgx',KIA:'f-kia',OIA:'f-oia'}[f]||'f-oia';
+}
+
+function render(data) {
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+  data.forEach(d => {
+    const tr = document.createElement('tr');
+    if (d.co) tr.className = 'co-row';
+    const coB = d.co ? '<span class="co-badge">co-invest</span>' : '';
+    const fundsHtml = d.funds.map(f => {
+      const m = FUND_META[f];
+      return `<div class="fund-tag-row"><span class="fund-flag">${m?m.flag:''}</span><span class="fund-tag ${fundClass(f)}">${f}</span></div>`;
+    }).join('');
+    tr.innerHTML = `
+      <td><div class="funds-cell-v">${fundsHtml}</div></td>
+      <td><div class="company-name">${d.company} ${coB}</div><div class="company-note">${d.note}</div></td>
+      <td class="hq-cell">${d.hq}</td>
+      <td><div class="sector-main">${d.sector.replace(' / Artificial Intelligence','')}</div></td>
+      <td><div class="sector-sub">${d.sub}</div></td>
+      <td class="amount-cell">${d.amtLabel}</td>
+      <td><span class="stage-pill ${stageClass(d.stage)}">${d.stage}</span></td>
+      <td class="date-cell">${d.date}</td>`;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('resultCount').textContent = data.length + ' deal' + (data.length !== 1 ? 's' : '');
+}
+
+function getFiltered() {
+  const fund = document.getElementById('fundFilter').value;
+  const sector = document.getElementById('sectorFilter').value;
+  const stage = document.getElementById('stageFilter').value;
+  let d = [...DEALS];
+  if (fund   !== 'all') d = d.filter(x => x.funds.includes(fund));
+  if (sector !== 'all') d = d.filter(x => x.sector === sector);
+  if (stage  !== 'all') d = d.filter(x => x.stageGroup === stage);
+  if (coOnly) d = d.filter(x => x.co);
+  d.sort((a,b) => {
+    const av = a[currentSort.field], bv = b[currentSort.field];
+    return (typeof av === 'number' ? av - bv : String(av).localeCompare(String(bv))) * currentSort.dir;
+  });
+  return d;
+}
+
+function applyFilters() { render(getFiltered()); }
+function toggleCo() { coOnly=!coOnly; document.getElementById('coToggle').classList.toggle('active',coOnly); applyFilters(); }
+function sortBy(f) { currentSort = (currentSort.field===f)?{field:f,dir:-currentSort.dir}:{field:f,dir:1}; applyFilters(); }
+
+function renderFundChart() {
+  const t={};
+  DEALS.forEach(d=>d.funds.forEach(f=>{t[f]=(t[f]||0)+d.amount/d.funds.length;}));
+  const s=Object.entries(t).sort((a,b)=>b[1]-a[1]);
+  const max=s[0][1];
+  document.getElementById('fundChart').innerHTML=s.map(([f,v])=>{
+    const m=FUND_META[f],pct=(v/max*100).toFixed(0),label=v>=1000?'$'+(v/1000).toFixed(0)+'B':'$'+Math.round(v)+'M';
+    return `<div class="bar-row"><div class="bar-label"><div class="bar-label-name">${f}</div><div class="bar-label-country">${m.country}</div></div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${m.color}"></div></div><div class="bar-val">${label}</div></div>`;
+  }).join('');
+}
+
+function renderSectorChart() {
+  const t={};
+  DEALS.forEach(d=>{t[d.sector]=(t[d.sector]||0)+d.amount;});
+  const s=Object.entries(t).sort((a,b)=>b[1]-a[1]).slice(0,7);
+  const max=s[0][1];
+  document.getElementById('sectorChart').innerHTML=s.map(([sec,v])=>{
+    const pct=(v/max*100).toFixed(0),label=v>=1000?'$'+(v/1000).toFixed(0)+'B':'$'+Math.round(v)+'M';
+    const short=sec.replace('/ Artificial Intelligence','').replace('/ Entertainment','').trim();
+    return `<div class="bar-row"><div class="bar-label" style="white-space:normal"><div class="bar-label-name" style="font-size:10px">${short}</div></div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${SECTOR_COLORS[sec]||'#888'}"></div></div><div class="bar-val">${label}</div></div>`;
+  }).join('');
+}
+
+function renderFundCountChart() {
+  const t={};
+  DEALS.forEach(d=>d.funds.forEach(f=>{t[f]=(t[f]||0)+1;}));
+  const s=Object.entries(t).sort((a,b)=>b[1]-a[1]);
+  const max=s[0][1];
+  document.getElementById('fundCountChart').innerHTML=s.map(([f,v])=>{
+    const m=FUND_META[f],pct=(v/max*100).toFixed(0);
+    return `<div class="bar-row"><div class="bar-label"><div class="bar-label-name">${f}</div><div class="bar-label-country">${m.country}</div></div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${m.color}"></div></div><div class="bar-val">${v} deal${v!==1?'s':''}</div></div>`;
+  }).join('');
+}
+
+function renderDonut() {
+  const g={};
+  DEALS.forEach(d=>{g[d.stageGroup]=(g[d.stageGroup]||0)+1;});
+  const entries=Object.entries(g).sort((a,b)=>b[1]-a[1]);
+  const total=entries.reduce((s,[,v])=>s+v,0);
+  const colors=['#2A4B7C','#1B6B5A','#7A4AB0','#445566','#2D6B35','#B04A2A','#8B3A3A'];
+  const svg=document.getElementById('donutSvg');
+  const cx=55,cy=55,r=38,ir=22;
+  let a=-Math.PI/2,paths='';
+  entries.forEach(([,count],i)=>{
+    const ang=(count/total)*Math.PI*2;
+    const [x1,y1]=[cx+r*Math.cos(a),cy+r*Math.sin(a)];
+    const [x2,y2]=[cx+r*Math.cos(a+ang),cy+r*Math.sin(a+ang)];
+    const [ix1,iy1]=[cx+ir*Math.cos(a),cy+ir*Math.sin(a)];
+    const [ix2,iy2]=[cx+ir*Math.cos(a+ang),cy+ir*Math.sin(a+ang)];
+    const lg=ang>Math.PI?1:0;
+    paths+=`<path d="M${ix1},${iy1}L${x1},${y1}A${r},${r} 0 ${lg},1 ${x2},${y2}L${ix2},${iy2}A${ir},${ir} 0 ${lg},0 ${ix1},${iy1}" fill="${colors[i%colors.length]}" stroke="white" stroke-width="1.5"/>`;
+    a+=ang;
+  });
+  svg.innerHTML=paths+`<text x="${cx}" y="${cy+4}" text-anchor="middle" font-size="11" font-weight="500" fill="#1A1410" font-family="DM Sans">${total}</text>`;
+  document.getElementById('donutLegend').innerHTML=entries.map(([label,count],i)=>`<div class="donut-legend-row"><div class="donut-dot" style="background:${colors[i%colors.length]}"></div><span class="donut-name">${label}</span><span class="donut-pct">${count}</span></div>`).join('');
+}
+
+renderLegend();
+renderFundChart();
+renderSectorChart();
+renderFundCountChart();
+renderDonut();
+render(DEALS.slice().sort((a,b)=>b.amount-a.amount));
+</script>
+</body>
+</html>
